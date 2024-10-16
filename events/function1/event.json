@@ -1,0 +1,13 @@
+{
+  "resource": "/function1",
+  "path": "/function1",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "application/json"
+  },
+  "queryStringParameters": {
+    "name": "World"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}

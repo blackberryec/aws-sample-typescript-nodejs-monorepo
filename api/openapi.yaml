@@ -1,0 +1,30 @@
+openapi: 3.0.1
+info:
+  title: Example API
+  version: 1.0.0
+paths:
+  /function1:
+    get:
+      summary: "Invoke function1"
+      operationId: "getFunction1"
+      responses:
+        "200":
+          description: "Success"
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function1.Arn}/invocations"
+        httpMethod: "POST"
+        type: "aws_proxy"
+
+  /function2:
+    get:
+      summary: "Invoke function2"
+      operationId: "getFunction2"
+      responses:
+        "200":
+          description: "Success"
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function2.Arn}/invocations"
+        httpMethod: "POST"
+        type: "aws_proxy"

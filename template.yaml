@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Serverless Application using Node.js, Esbuild, and TypeScript
+
+Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties: 
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: api/openapi.yaml  # Link to the OpenAPI definition
+
+  Function1:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/lambdas/function1/app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: dist/lambdas/function1/.
+      MemorySize: 128
+      Layers:
+        - !Ref Layer1
+      Environment:
+        Variables:
+          EXAMPLE_VAR: "Value"
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /function1
+            Method: GET
+
+  Function2:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/lambdas/function2/app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: dist/lambdas/function2/.
+      MemorySize: 128
+      Layers:
+        - !Ref Layer2
+      Environment:
+        Variables:
+          EXAMPLE_VAR: "Value"
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /function2
+            Method: GET
+
+  Layer1:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: Layer1
+      ContentUri: dist/layers/layer1
+      CompatibleRuntimes:
+        - nodejs20.x
+
+  Layer2:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: Layer2
+      ContentUri: dist/layers/layer2
+      CompatibleRuntimes:
+        - nodejs20.x
