@@ -5,7 +5,7 @@ Description: AWS Serverless Application using Node.js, Esbuild, and TypeScript
 Resources:
   ApiGateway:
     Type: AWS::Serverless::Api
-    Properties: 
+    Properties:
       StageName: Prod
       DefinitionBody:
         Fn::Transform:

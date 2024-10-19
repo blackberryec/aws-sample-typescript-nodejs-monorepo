@@ -19,11 +19,11 @@ build: clean
 	@mkdir -p $(DIST_LAMBDA) ${DIST_LAYER}
 	@for lambda in $(LAMBDA_DIRS); do \
 		echo "Building $$lambda..."; \
-		npx esbuild $$lambda/app.ts --bundle --platform=$(PLATFORM) --target=${NODE_TARGET} --outdir=${DIST}/$$lambda --external:aws-sdk; \
+		npx esbuild $$lambda/app.ts --bundle --platform=$(PLATFORM) --target=${NODE_TARGET} --outdir=${DIST}/$$lambda --external:aws-sdk --format=esm --minify; \
 	done
 	@for layer in $(LAYER_DIRS); do \
 		echo "Building $$layer..."; \
-		npx esbuild $$layer/**.ts --bundle --platform=$(PLATFORM) --target=${NODE_TARGET} --outdir=${DIST}/$$layer/nodejs/node20/node_modules; \
+		npx esbuild $$layer/**.ts --bundle --platform=$(PLATFORM) --target=${NODE_TARGET} --outdir=${DIST}/$$layer/nodejs/node20/node_modules --format=esm --minify; \
 	done
 
 # Zip all lambdas and layers for deployment
@@ -42,7 +42,7 @@ zip: build
 sam-build: zip
 	@echo "Building SAM application..."
 	sam build --use-container
-	
+
 # Invoke a specific function locally
 sam-local-invoke:
 	@read -p "Enter the Lambda function name (from template.yaml): " function_name; \
